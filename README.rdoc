@@ -118,6 +118,15 @@ To execute:
 
 	rake demo_proxy_login
 
+10. Configuring twitter application keys
+
+Register your application at http://twitter.com/oauth_clients
+
+Add the twitter application key and consumer secret to the environment (or edit config/environment.rb)
+
+e.g. for heroku, add the environment keys:
+
+	heroku config:add TWOAUTH_KEY=8N029N81 TWOAUTH_SECRET=9s83109d3+583493190
 
 
 
