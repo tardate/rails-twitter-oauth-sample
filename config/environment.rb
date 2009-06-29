@@ -72,4 +72,15 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+  
+  
+	# Twitter OAuth settings
+	TWOAUTH_SITE = 'http://twitter.com'
+	TWOAUTH_CALLBACK = 'http://rails-twitter-oauth-sample.heroku.com/members/callback'
+	# Twitter OAuth Consumer key
+	TWOAUTH_KEY = 'y7CAd0Kr4f5XK697P5aRw'
+	# Twitter OAuth Consumer secret
+	TWOAUTH_SECRET = 'Oxa77eN8V1Ythjyq0XWF1JsfcYyORXesPr41de3ecQ'
+
+  
 end

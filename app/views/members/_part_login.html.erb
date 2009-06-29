@@ -1,0 +1,13 @@
+
+
+<div id="currentuser">
+<% if logged_in? %>
+You are logged in as <%= current_user.screen_name  %>. 
+<%= link_to 'sign-out', signout_path  %>
+
+<% else %>
+
+<%= link_to  image_tag( 'Sign-in-with-Twitter-darker.png', { :alt => 'Sign-in With Twitter' } ), new_member_path  %>
+
+<% end %>
+</div>

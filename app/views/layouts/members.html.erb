@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>Members: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold' %>
+  <%= javascript_include_tag( :defaults ) %>
+</head>
+<body>
+
+<div id="header">
+<h1>Twitter OAuth Sample</h1>
+</div>
+
+<div id="flashbar">
+	<%= content_tag(:div, flash[:notice], :class => 'flash', :id => 'flash' )  + 
+	javascript_tag( visual_effect( :fade , :flash, :duration => 20 ) )  if flash[:notice] %>
+	<%= content_tag(:div, flash[:error], :class => 'flasherror') if flash[:error] %>
+</div>
+
+<%= render :partial => "members/part_login", :locals => {  } -%>
+
+<%= yield  %>
+
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<div id="userdetails">
+<p>
+  <b>Twitter ID:</b>
+  <%=h @member.twitter_id %>
+</p>
+
+<p>
+  <b>Screen name:</b>
+  <%=h @member.screen_name %>
+</p>
+
+<p>
+  <b>Token:</b>
+  <%=h @member.token %>
+</p>
+
+<p>
+  <b>Secret:</b>
+  <%=h @member.secret %>
+</p>
+</div>
+
+<div id="menu">
+<%= link_to_remote "Show friends",
+   :url => partialfriends_member_path(@member),
+   :method => :get,
+   :loading => "$('error').innerHTML = '';$('data').innerHTML = 'Loading..';",
+   :update => { :success => "data", :failure => "error" }
+%> |
+<%= link_to_remote "Show followers",
+   :url => partialfollowers_member_path(@member),
+   :method => :get,
+   :loading => "$('error').innerHTML = '';$('data').innerHTML = 'Loading..';",
+   :update => { :success => "data", :failure => "error" }
+%> |
+<%= link_to_remote "Show mentions",
+   :url => partialmentions_member_path(@member),
+   :method => :get,
+   :loading => "$('error').innerHTML = '';$('data').innerHTML = 'Loading..';",
+   :update => { :success => "data", :failure => "error" }
+%> |
+<%= link_to_remote "Show direct messages",
+   :url => partialdms_member_path(@member),
+   :method => :get,
+   :loading => "$('error').innerHTML = '';$('data').innerHTML = 'Loading..';",
+   :update => { :success => "data", :failure => "error" }
+%>
+</div>
+
+<div id="error">
+</div>
+<div id="data">
+</div>
