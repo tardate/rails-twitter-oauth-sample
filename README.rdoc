@@ -2,12 +2,12 @@
 
 Prepared by: paul gallagher - http://tardate.com
 Repository: http://github.com/tardate/rails-twitter-oauth-sample/tree/master
-Demonstration: http://rails-twitter-oauth-sample.heroku.com
+Demonstration site: http://rails-twitter-oauth-sample.heroku.com
 
 
 == Purpose
 
-Demonstrates the use of rails with the Twitter OAuth 1.0a API.
+Demonstrates the use of rails with the Twitter RESTful API with OAuth 1.0a.
 Uses the oauth ruby gem.
 
 
@@ -44,7 +44,8 @@ NB: for heroku deployment, these are specified in the .gems file in the root of 
 
 	ruby script/generate scaffold member twitter_id:integer screen_name:string token:string secret:string profile_image_url:string
 
-	Member model updated to use screen_name as the key:
+Member model updated to use screen_name as the key:
+
 		def to_param
 			screen_name
 		end
@@ -55,19 +56,21 @@ NB: for heroku deployment, these are specified in the .gems file in the root of 
 
 5. Create the oauth support in ./lib
 
-	twitter_oauth.rb
-		Implements TwitterOauth class, which is a wrapper around the oauth gem, providing specific
-		support for twitter.
-		As a design principle, the TwitterOauth class logs and re-raises any errors that occur; some
-		custom error classes are defined to suit.
-		It includes implementations for many of the twitter api methods (but not all at this point)
+twitter_oauth.rb
+
+* Implements TwitterOauth class, which is a wrapper around the oauth gem, providing specific
+* support for twitter.
+* As a design principle, the TwitterOauth class logs and re-raises any errors that occur; some
+* custom error classes are defined to suit.
+* It includes implementations for many of the twitter api methods (but not all at this point)
 		
 		
-	oauth_system.rb
-		A controller mixin module to provide twitter oauth support in an application.
-		Uses the TwitterOauth class for oauth functionality.
-		Works specifically with the Member ActiveRecord class to update/verify user details.
-		It includes wrappers for many of the twitter api methods, basically to reroute errors into the flash hash.
+oauth_system.rb
+
+* A controller mixin module to provide twitter oauth support in an application.
+* Uses the TwitterOauth class for oauth functionality.
+* Works specifically with the Member ActiveRecord class to update/verify user details.
+* It includes wrappers for many of the twitter api methods, basically to reroute errors into the flash hash.
 
 
 6. Modify MembersController to use OAuth
@@ -79,37 +82,41 @@ NB: for heroku deployment, these are specified in the .gems file in the root of 
 
 7. Specify routes
 
-	Map members resources
-	Hook /members/callback method to module OauthSystem.callback
+Map members resources
+Hook /members/callback method to module OauthSystem.callback
 	
-		map.resources :members,
-			:collection => { :callback => :get }
+	map.resources :members,
+	  :collection => { :callback => :get }
 
-	Hook /signout method to module OauthSystem.signout:
+Hook /signout method to module OauthSystem.signout:
 	
-		map.signout '/signout', :controller => 'members', :action => 'signout'
+	map.signout '/signout', :controller => 'members', :action => 'signout'
 
-	For the sample app, use MembersController.index as the landing page:
+For the sample app, use MembersController.index as the landing page:
 	
-		map.root      :controller => "members"
+	map.root      :controller => "members"
 
 
 8. Customise views and controller methods for some basic functionality
 
-	MembersController.index
-		a basic landing page
+MembersController actions
 
-	MembersController.show
-		main page for logged-in user
-		
+* index - a basic landing page
+* show - main page for logged-in user
+* partialfriends - xhr responder to render friends list
+* partialfollowers - xhr responder to render followers list 
+* partialmentions - xhr responder to render mentions list
+* partialdms - xhr responder to render direct messages list
+
 	
 9. Add rake task to demonstrate proxy-login
 
-	see lib/tasks/test.rake:
-	demo_proxy_login task connects as the last member and exercises the API a bit
-	
-	to execute:
-		rake demo_proxy_login
+See lib/tasks/test.rake:
+demo_proxy_login task connects as the last member and exercises the API a bit
+
+To execute:
+
+	rake demo_proxy_login
 
 
 
