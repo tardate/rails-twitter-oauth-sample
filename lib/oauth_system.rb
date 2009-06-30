@@ -58,9 +58,9 @@ module OauthSystem
 
 protected
   
-    # Inclusion hook to make #current_user, #logged_in?, :authorized? available as ActionView helper methods.
+    # Inclusion hook to make #current_user, #logged_in? available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_user, :logged_in?,:authorized? if base.respond_to? :helper_method
+		base.send :helper_method, :current_user, :logged_in? if base.respond_to? :helper_method
     end
 
 

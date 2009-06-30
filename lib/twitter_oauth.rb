@@ -47,12 +47,6 @@ class TwitterOauth
 			raise err
 		end
 	end
-	
-	# helper 
-#	def  request_token( request_token,  request_token_secret )
-#		#RAILS_DEFAULT_LOGGER.info "TwitterOauth. request_token: request_token=#{request_token}, request_token_secret=#{request_token_secret}" 
-#		OAuth::RequestToken.new(self.consumer, request_token, request_token_secret)
-#   end
 
 	# gets a request token to be used for the authorization request to twitter 
 	def get_request_token( oauth_callback = TWOAUTH_CALLBACK )
@@ -289,6 +283,25 @@ class TwitterOauth
 	end
 	
 
+	# debug routines
+	
+	def dump_friends( screen_name = nil )
+		puts "friends list for #{ screen_name ? screen_name : 'self' }.."
+		friends = self.friends( screen_name )
+		friends.each do |friend|
+			puts "\t#{friend['screen_name']}"
+		end
+		puts "end friends list for #{ screen_name ? screen_name : 'self' }.."
+	end
+	
+	def dump_followers( screen_name = nil )
+		puts "followers list for #{ screen_name ? screen_name : 'self' }.."
+		friends = self.followers( screen_name )
+		friends.each do |friend|
+			puts "\t#{friend['screen_name']}"
+		end
+		puts "end followers list for #{ screen_name ? screen_name : 'self' }.."
+	end	
 	
 end
 
