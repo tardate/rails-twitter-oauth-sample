@@ -76,7 +76,8 @@ Rails::Initializer.run do |config|
   
 	# Twitter OAuth settings
 	TWOAUTH_SITE = 'http://twitter.com'
-	TWOAUTH_CALLBACK = 'http://rails-twitter-oauth-sample.heroku.com/members/callback'
+	# Twitter OAuth callback default
+	TWOAUTH_CALLBACK = ENV['TWOAUTH_CALLBACK']
 	# Twitter OAuth Consumer key
 	TWOAUTH_KEY = ENV['TWOAUTH_KEY']
 	# Twitter OAuth Consumer secret

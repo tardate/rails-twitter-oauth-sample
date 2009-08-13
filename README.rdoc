@@ -131,11 +131,14 @@ and are required to complete the configuration.
 Add the twitter application key and consumer secret as operating system environment variables
 (TWOAUTH_KEY and TWOAUTH_SECRET respectively).
 
+Set your callback URL as operating system environment variable (TWOAUTH_CALLBACK).
+ 
 Alternatively, you can edit config/environment.rb to set these directly.
 
 If you are using heroku, add the environment keys using the heroky utility (gem):
 
-	heroku config:add TWOAUTH_KEY=8N029N81 TWOAUTH_SECRET=9s83109d3+583493190
+	heroku config:add TWOAUTH_KEY=8N029N81 TWOAUTH_SECRET=9s83109d3+583493190 TWOAUTH_CALLBACK=http://rails-twitter-oauth-sample.heroku.com/members/callback
+	
 
 == 11. Testing the application locally
 
@@ -144,7 +147,7 @@ e.g. http://rails-twitter-oauth-sample.heroku.com/members/callback
 
 This is the address that twitter sends users back to after the twitter authentication step.
 
-To test on a local development machine (not known on the web/in DNS) as the domain name in the callback,
+To test on a local development machine (not known on the web/in DNS as the domain name in the callback),
 you can simply add the registered domain to your hosts file (aliasing localhost) e.g.
 
 	127.0.0.1       rails-twitter-oauth-sample.heroku.com
