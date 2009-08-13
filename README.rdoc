@@ -58,12 +58,9 @@ Member model updated to use screen_name as the key:
 
 twitter_oauth.rb
 
-* Implements TwitterOauth class, which is a wrapper around the oauth gem, providing specific
-* support for twitter.
-* As a design principle, the TwitterOauth class logs and re-raises any errors that occur; some
-* custom error classes are defined to suit.
+* Implements TwitterOauth class, which is a wrapper around the oauth gem, providing specific support for twitter.
+* As a design principle, the TwitterOauth class logs and re-raises any errors that occur; some custom error classes are defined to suit.
 * It includes implementations for many of the twitter api methods (but not all at this point)
-		
 		
 oauth_system.rb
 
@@ -121,6 +118,12 @@ To execute:
 == 10. Configuring twitter application keys
 
 Register your application at http://twitter.com/oauth_clients
+
+Be sure to select the following settings in the registration: 
+* Application Type = Browser
+* Callback URL = the fully qualified callback to your app e.g. http://rails-twitter-oauth-sample.heroku.com/members/callback
+* Default Access type = Read & Write (if you want to be able to do things like post status updates)
+* Use Twitter for login = yes
 
 Note the "application key" and "consumer secret" numbers that twitter generates - these are unique for your application
 and are required to complete the configuration.
