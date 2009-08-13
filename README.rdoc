@@ -3,7 +3,7 @@
 Prepared by: paul gallagher - http://tardate.com
 Repository: http://github.com/tardate/rails-twitter-oauth-sample/tree/master
 Demonstration site: http://rails-twitter-oauth-sample.heroku.com
-
+Related blog post: http://tardate.blogspot.com/2009/06/using-twitter-oauth-with-rails-sample.html
 
 == Purpose
 
@@ -30,17 +30,17 @@ NB: for heroku deployment, these are specified in the .gems file in the root of 
 
 = STEP-BY-STEP (how the app was created)
 
-1. Install oauth gem
+== 1. Install oauth gem
 
 	gem install oauth
 
-2. create the application shell
+== 2. create the application shell
 
 	rails rails-twitter-oauth-sample
 	cd rails-twitter-oauth-sample
 	rake db:create
 
-3. create a member scaffold
+== 3. create a member scaffold
 
 	ruby script/generate scaffold member twitter_id:integer screen_name:string token:string secret:string profile_image_url:string
 
@@ -50,11 +50,11 @@ Member model updated to use screen_name as the key:
 			screen_name
 		end
 		
-4. Prepare the database
+== 4. Prepare the database
 
 	rake db:migrate
 
-5. Create the oauth support in ./lib
+== 5. Create the oauth support in ./lib
 
 twitter_oauth.rb
 
@@ -73,14 +73,14 @@ oauth_system.rb
 * It includes wrappers for many of the twitter api methods, basically to reroute errors into the flash hash.
 
 
-6. Modify MembersController to use OAuth
+== 6. Modify MembersController to use OAuth
 
 	# include the oauth_system mixin
 	include OauthSystem
 	# specify oauth to be on all user-specific actions
 	before_filter :oauth_login_required, :except => [ :callback, :signout, :index ]
 
-7. Specify routes
+== 7. Specify routes
 
 Map members resources
 Hook /members/callback method to module OauthSystem.callback
@@ -97,7 +97,7 @@ For the sample app, use MembersController.index as the landing page:
 	map.root      :controller => "members"
 
 
-8. Customise views and controller methods for some basic functionality
+== 8. Customise views and controller methods for some basic functionality
 
 MembersController actions
 
@@ -109,7 +109,7 @@ MembersController actions
 * partialdms - xhr responder to render direct messages list
 
 	
-9. Add rake task to demonstrate proxy-login
+== 9. Add rake task to demonstrate proxy-login
 
 See lib/tasks/test.rake:
 demo_proxy_login task connects as the last member and exercises the API a bit
@@ -118,19 +118,34 @@ To execute:
 
 	rake demo_proxy_login
 
-10. Configuring twitter application keys
+== 10. Configuring twitter application keys
 
 Register your application at http://twitter.com/oauth_clients
 
-Add the twitter application key and consumer secret to the environment (or edit config/environment.rb)
+Note the "application key" and "consumer secret" numbers that twitter generates - these are unique for your application
+and are required to complete the configuration.
 
-e.g. for heroku, add the environment keys:
+Add the twitter application key and consumer secret as operating system environment variables
+(TWOAUTH_KEY and TWOAUTH_SECRET respectively).
+
+Alternatively, you can edit config/environment.rb to set these directly.
+
+If you are using heroku, add the environment keys using the heroky utility (gem):
 
 	heroku config:add TWOAUTH_KEY=8N029N81 TWOAUTH_SECRET=9s83109d3+583493190
 
+== 11. Testing the application locally
 
+When you register the application at twitter, you will specify a fully qualified callback URL
+e.g. http://rails-twitter-oauth-sample.heroku.com/members/callback
 
+This is the address that twitter sends users back to after the twitter authentication step.
 
+To test on a local development machine (not known on the web/in DNS) as the domain name in the callback,
+you can simply add the registered domain to your hosts file (aliasing localhost) e.g.
 
+	127.0.0.1       rails-twitter-oauth-sample.heroku.com
 
+NB: most browsers will need to be restarted each time you change this,
+as the resolved name will have been cached if you have already used the address.
 
