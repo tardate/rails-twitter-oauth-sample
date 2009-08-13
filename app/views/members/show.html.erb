@@ -20,6 +20,14 @@
 </p>
 </div>
 
+<% form_tag update_status_member_path do -%>
+<p>
+  <b>What are you doing?</b><br />
+  <%= text_area_tag 'status_message' %>
+</p>
+<div><%= submit_tag 'Post' %></div>
+<% end -%>
+
 <div id="menu">
 <%= link_to_remote "Show friends",
    :url => partialfriends_member_path(@member),

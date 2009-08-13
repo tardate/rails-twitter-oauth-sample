@@ -29,6 +29,15 @@ class MembersController < ApplicationController
 		end
 	end
 
+	def update_status
+		if self.update_status!(params[:status_message])
+			flash[:notice] = 'status update sent'
+		else
+			flash[:error] = 'status update problem'
+		end
+		redirect_to member_path(@member)
+	end
+
 	def partialfriends
 		if (request.xhr?)
 			@friends = self.friends()

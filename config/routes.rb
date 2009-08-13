@@ -3,7 +3,13 @@ ActionController::Routing::Routes.draw do |map|
 
 	map.resources :members,
 		:collection => { :callback => :get },
-		:member => { :partialfriends => :get, :partialfollowers => :get, :partialmentions => :get , :partialdms => :get    }
+		:member => { 
+			:update_status => :post, 
+			:partialfriends => :get, 
+			:partialfollowers => :get, 
+			:partialmentions => :get , 
+			:partialdms => :get    
+		}
 
 	map.signout '/signout', :controller => 'members', :action => 'signout'
 

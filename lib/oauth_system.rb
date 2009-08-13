@@ -130,6 +130,16 @@ protected
 
 	# controller wrappers for twitter API methods
 
+	# Twitter REST API Method: statuses/update
+	def update_status!(  status , in_reply_to_status_id = nil )
+		begin
+			self.twitagent.update_status!(  status , in_reply_to_status_id )
+		rescue => err
+			# The user might have rejected this application. Or there was some other error during the request.
+			RAILS_DEFAULT_LOGGER.error "#{err.message} Failed update status"
+			return
+		end
+	end
 
 	# Twitter REST API Method: statuses friends
 	def friends(user=nil)

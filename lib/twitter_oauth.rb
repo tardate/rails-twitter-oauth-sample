@@ -338,10 +338,9 @@ class TwitterOauth
 	end
 	
 	def dump_followers( screen_name = nil )
-		puts "followers list for #{ screen_name ? screen_name : 'self' }.."
-		puts "friends list for #{ screen_name ? screen_name : 'self' }..found #{followers.size} followers.."
-		friends = self.followers( screen_name )
-		friends.each do |friend|
+		followers = self.followers( screen_name )
+		puts "followers list for #{ screen_name ? screen_name : 'self' }..found #{followers.size} followers.."
+		followers.each do |friend|
 			puts "\t#{friend['screen_name']}"
 		end
 		puts "end followers list for #{ screen_name ? screen_name : 'self' }.."
