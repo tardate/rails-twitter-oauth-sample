@@ -93,9 +93,14 @@ class TwitterOauth
 	end	
 	
 	# Twitter REST API Method: statuses friends
-	def friends(user=nil)
+	def friends_by_page( user=nil, page = 1 )
 		begin
-			response = access_token.get("/statuses/friends#{ user ? '/' + user : '' }.json")
+			params = (
+				{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+			).compact.join('&')
+			#params = "?#{params}" unless params.empty?
+			url = "/statuses/friends.json?#{params}"
+			response = access_token.get( url )
 			case response
 			when Net::HTTPSuccess
 				friends=JSON.parse(response.body)
@@ -105,23 +110,61 @@ class TwitterOauth
 				raise TwitterOauth::APIError
 			end
 		rescue => err
+			puts "Exception in friends_by_page: #{err}"
+			raise err
+		end
+	end
+	def friends(user=nil)
+		begin
+			page = 1
+			friends = []
+			begin
+				friendspage = friends_by_page( user, page )
+				puts "page #{page} - found #{friendspage.size} friends"
+				friends += friendspage if friendspage
+				page += 1
+			end until friendspage.size == 0
+			friends
+		rescue => err
 			puts "Exception in friends: #{err}"
 			raise err
 		end
 	end
 
+	
 	# Twitter REST API Method: statuses followers
-	def followers(user=nil)
+	def followers_by_page( user=nil, page = 1 )
 		begin
-			response = access_token.get("/statuses/followers#{ user ? '/' + user : '' }.json")
+			params = (
+				{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+			).compact.join('&')
+			#params = "?#{params}" unless params.empty?
+			url = "/statuses/followers.json?#{params}"
+			response = access_token.get( url )
 			case response
 			when Net::HTTPSuccess
-				followers=JSON.parse(response.body)
-				raise TwitterOauth::UnexpectedResponse unless followers.is_a? Array
-				followers
+				friends=JSON.parse(response.body)
+				raise TwitterOauth::UnexpectedResponse unless friends.is_a? Array
+				friends
 			else
 				raise TwitterOauth::APIError
 			end
+		rescue => err
+			puts "Exception in followers_by_page: #{err}"
+			raise err
+		end
+	end
+	def followers(user=nil)
+		begin
+			page = 1
+			followers = []
+			begin
+				followerspage = followers_by_page( user, page )
+				puts "page #{page} - found #{followerspage.size} followers"
+				followers += followerspage if followerspage
+				page += 1
+			end until followerspage.size == 0
+			followers
 		rescue => err
 			puts "Exception in followers: #{err}"
 			raise err
@@ -286,8 +329,8 @@ class TwitterOauth
 	# debug routines
 	
 	def dump_friends( screen_name = nil )
-		puts "friends list for #{ screen_name ? screen_name : 'self' }.."
 		friends = self.friends( screen_name )
+		puts "friends list for #{ screen_name ? screen_name : 'self' }..found #{friends.size} friends.."
 		friends.each do |friend|
 			puts "\t#{friend['screen_name']}"
 		end
@@ -296,6 +339,7 @@ class TwitterOauth
 	
 	def dump_followers( screen_name = nil )
 		puts "followers list for #{ screen_name ? screen_name : 'self' }.."
+		puts "friends list for #{ screen_name ? screen_name : 'self' }..found #{followers.size} followers.."
 		friends = self.followers( screen_name )
 		friends.each do |friend|
 			puts "\t#{friend['screen_name']}"
@@ -304,4 +348,3 @@ class TwitterOauth
 	end	
 	
 end
-
