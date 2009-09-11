@@ -1,7 +1,7 @@
 class CreateMembers < ActiveRecord::Migration
 	def self.up
 		create_table :members do |t|
-			t.integer :twitter_id
+			t.column :twitter_id, :bigint, :null => false
 			t.string :screen_name
 			t.string :token
 			t.string :secret

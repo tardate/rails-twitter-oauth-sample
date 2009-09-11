@@ -12,7 +12,7 @@
 ActiveRecord::Schema.define(:version => 20090628130314) do
 
   create_table "members", :force => true do |t|
-    t.integer  "twitter_id"
+    t.integer  "twitter_id",        :null => false
     t.string   "screen_name"
     t.string   "token"
     t.string   "secret"
