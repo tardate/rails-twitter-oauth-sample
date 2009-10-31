@@ -18,42 +18,39 @@ module OauthSystem
 	
 	# controller method to handle twitter callback (expected after login_by_oauth invoked)
 	def callback
-		begin
-			self.twitagent.exchange_request_for_access_token( session[:request_token], session[:request_token_secret], params[:oauth_verifier] )
-			
-			user_info = self.twitagent.verify_credentials
-			
-			raise OauthSystem::RequestError unless user_info['id'] && user_info['screen_name'] && user_info['profile_image_url']
-			
-			# We have an authorized user, save the information to the database.
-			@member = Member.find_by_screen_name(user_info['screen_name'])
-			if @member
-				@member.token = self.twitagent.access_token.token
-				@member.secret = self.twitagent.access_token.secret
-				@member.profile_image_url = user_info['profile_image_url']
-			else
-				@member = Member.new({ 
-					:twitter_id => user_info['id'],
-					:screen_name => user_info['screen_name'],
-					:token => self.twitagent.access_token.token,
-					:secret => self.twitagent.access_token.secret,
-					:profile_image_url => user_info['profile_image_url'] })
-			end
-			if @member.save!
-				self.current_user = @member		
-			else
-				raise OauthSystem::RequestError
-			end
-			# Redirect to the show page
-			redirect_to member_path(@member)
-			
-		rescue
-			# The user might have rejected this application. Or there was some other error during the request.
-			RAILS_DEFAULT_LOGGER.error "Failed to get user info via OAuth"
-			flash[:error] = "Twitter API failure (account login)"
-			redirect_to root_url
-			return
+		self.twitagent.exchange_request_for_access_token( session[:request_token], session[:request_token_secret], params[:oauth_verifier] )
+		
+		user_info = self.twitagent.verify_credentials
+		
+		raise OauthSystem::RequestError unless user_info['id'] && user_info['screen_name'] && user_info['profile_image_url']
+		
+		# We have an authorized user, save the information to the database.
+		@member = Member.find_by_screen_name(user_info['screen_name'])
+		if @member
+			@member.token = self.twitagent.access_token.token
+			@member.secret = self.twitagent.access_token.secret
+			@member.profile_image_url = user_info['profile_image_url']
+		else
+			@member = Member.new({ 
+				:twitter_id => user_info['id'],
+				:screen_name => user_info['screen_name'],
+				:token => self.twitagent.access_token.token,
+				:secret => self.twitagent.access_token.secret,
+				:profile_image_url => user_info['profile_image_url'] })
 		end
+		if @member.save!
+			self.current_user = @member		
+		else
+			raise OauthSystem::RequestError
+		end
+		# Redirect to the show page
+		redirect_to member_path(@member)
+		
+	rescue
+		# The user might have rejected this application. Or there was some other error during the request.
+		RAILS_DEFAULT_LOGGER.error "Failed to get user info via OAuth"
+		flash[:error] = "Twitter API failure (account login)"
+		redirect_to root_url
 	end
 
 protected
@@ -65,7 +62,6 @@ protected
 
 
     def twitagent( user_token = nil, user_secret = nil )
-		#RAILS_DEFAULT_LOGGER.info "twitagent"
 		self.twitagent = TwitterOauth.new( user_token, user_secret )  if user_token && user_secret
 		self.twitagent = TwitterOauth.new( ) unless @twitagent
 		@twitagent ||= raise OauthSystem::NotInitializedError
@@ -82,7 +78,6 @@ protected
 	
     # Sets the current_user, including initializing the OAuth agent
     def current_user=(new_user)
-		#RAILS_DEFAULT_LOGGER.info "setting current_user #{new_user.inspect}"
 		if new_user
 			session[:twitter_id] = new_user.twitter_id
 			self.twitagent( user_token = new_user.token, user_secret = new_user.secret )
@@ -109,21 +104,16 @@ protected
     end
 
 	def login_by_oauth
-		begin
-			#RAILS_DEFAULT_LOGGER.info "login_by_oauth"
-			request_token = self.twitagent.get_request_token
-			session[:request_token] = request_token.token
-			session[:request_token_secret] = request_token.secret
-			# Send to twitter.com to authorize
-			redirect_to request_token.authorize_url
-			return
-		rescue
-			# The user might have rejected this application. Or there was some other error during the request.
-			RAILS_DEFAULT_LOGGER.error "Failed to login via OAuth"
-			flash[:error] = "Twitter API failure (account login)"
-			redirect_to root_url
-			return
-		end
+		request_token = self.twitagent.get_request_token
+		session[:request_token] = request_token.token
+		session[:request_token_secret] = request_token.secret
+		# Send to twitter.com to authorize
+		redirect_to request_token.authorize_url
+	rescue
+		# The user might have rejected this application. Or there was some other error during the request.
+		RAILS_DEFAULT_LOGGER.error "Failed to login via OAuth"
+		flash[:error] = "Twitter API failure (account login)"
+		redirect_to root_url
 	end
 
 	
