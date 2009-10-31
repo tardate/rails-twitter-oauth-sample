@@ -92,85 +92,135 @@ class TwitterOauth
 		end
 	end	
 	
-	# Twitter REST API Method: statuses friends
+	# Twitter REST API Method: statuses friends (page-based implementation)
+	# Returns: friends array
 	def friends_by_page( user=nil, page = 1 )
-		begin
-			params = (
-				{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
-			).compact.join('&')
-			#params = "?#{params}" unless params.empty?
-			url = "/statuses/friends.json?#{params}"
-			response = access_token.get( url )
-			case response
-			when Net::HTTPSuccess
-				friends=JSON.parse(response.body)
-				raise TwitterOauth::UnexpectedResponse unless friends.is_a? Array
-				friends
-			else
-				raise TwitterOauth::APIError
-			end
-		rescue => err
-			puts "Exception in friends_by_page: #{err}"
-			raise err
-		end
-	end
-	def friends(user=nil)
-		begin
-			page = 1
-			friends = []
-			begin
-				friendspage = friends_by_page( user, page )
-				puts "page #{page} - found #{friendspage.size} friends"
-				friends += friendspage if friendspage
-				page += 1
-			end until friendspage.size == 0
+		warn "[DEPRECATION] the page parameter ot the twitter API has been deprecated as of 26-Oct-2009. use 'friends_by_cursor' method instead."
+		params = (
+			{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+		).compact.join('&')
+		url = "/statuses/friends.json?#{params}"
+		response = access_token.get( url )
+		case response
+		when Net::HTTPSuccess
+			friends=JSON.parse(response.body)
+			raise TwitterOauth::UnexpectedResponse unless friends.is_a? Array
 			friends
-		rescue => err
-			puts "Exception in friends: #{err}"
-			raise err
+		else
+			raise TwitterOauth::APIError
 		end
+	rescue => err
+		puts "Exception in friends_by_page: #{err}"
+		raise err
+	end
+	
+	# Twitter REST API Method: statuses friends (cursor-based implementation)
+	# Returns: friends hash
+	def friends_by_cursor( user=nil, cursor = -1 )
+		params = (
+			{ :screen_name => user, :cursor => cursor }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+		).compact.join('&')
+		url = "/statuses/friends.json?#{params}"
+		response = access_token.get( url )
+		case response
+		when Net::HTTPSuccess
+			friends=JSON.parse(response.body)
+			raise TwitterOauth::UnexpectedResponse unless friends.is_a? Hash
+			friends
+		else
+			raise TwitterOauth::APIError
+		end
+	rescue => err
+		puts "Exception in friends_by_cursor: #{err}"
+		raise err
 	end
 
-	
-	# Twitter REST API Method: statuses followers
+	# Twitter REST API Method: statuses friends
+	# Returns: array of all friends for the given user
+	# Parameters:
+	# <t>user</t> - screen_name of the user to retrieve friends for. if nil, returns friends for the current twitter-authenticated user
+	def friends(user=nil)
+		cursor = -1
+		page = 0
+		friends = []
+		begin
+			friendspage = friends_by_cursor( user, cursor )
+			page += 1
+			puts "page #{page}/cursor #{cursor} - found #{friendspage["users"].size} friends. Next cursor: #{friendspage["next_cursor"]}"
+			friends += friendspage["users"] if friendspage
+			cursor = friendspage["next_cursor"]
+		end until cursor == 0
+		friends
+	rescue => err
+		puts "Exception in friends: #{err}"
+		raise err
+	end
+
+
+	# Twitter REST API Method: statuses followers (page-based implementation)
+	# Returns: followers array
 	def followers_by_page( user=nil, page = 1 )
-		begin
-			params = (
-				{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
-			).compact.join('&')
-			#params = "?#{params}" unless params.empty?
-			url = "/statuses/followers.json?#{params}"
-			response = access_token.get( url )
-			case response
-			when Net::HTTPSuccess
-				friends=JSON.parse(response.body)
-				raise TwitterOauth::UnexpectedResponse unless friends.is_a? Array
-				friends
-			else
-				raise TwitterOauth::APIError
-			end
-		rescue => err
-			puts "Exception in followers_by_page: #{err}"
-			raise err
+		warn "[DEPRECATION] the page parameter ot the twitter API has been deprecated as of 26-Oct-2009. use 'followers_by_cursor' method instead."
+		params = (
+			{ :screen_name => user, :page => page }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+		).compact.join('&')
+		url = "/statuses/followers.json?#{params}"
+		response = access_token.get( url )
+		case response
+		when Net::HTTPSuccess
+			friends=JSON.parse(response.body)
+			raise TwitterOauth::UnexpectedResponse unless friends.is_a? Array
+			friends
+		else
+			raise TwitterOauth::APIError
 		end
-	end
-	def followers(user=nil)
-		begin
-			page = 1
-			followers = []
-			begin
-				followerspage = followers_by_page( user, page )
-				puts "page #{page} - found #{followerspage.size} followers"
-				followers += followerspage if followerspage
-				page += 1
-			end until followerspage.size == 0
-			followers
-		rescue => err
-			puts "Exception in followers: #{err}"
-			raise err
-		end
+	rescue => err
+		puts "Exception in followers_by_page: #{err}"
+		raise err
 	end
 	
+	# Twitter REST API Method: statuses followers (cursor-based implementation)
+	# Returns: followers hash
+	def followers_by_cursor( user=nil, cursor = -1 )
+		params = (
+			{ :screen_name => user, :cursor => cursor }.collect { |n| "#{n[0]}=#{n[1]}" if n[1] }
+		).compact.join('&')
+		url = "/statuses/followers.json?#{params}"
+		response = access_token.get( url )
+		case response
+		when Net::HTTPSuccess
+			friends=JSON.parse(response.body)
+			raise TwitterOauth::UnexpectedResponse unless friends.is_a? Hash
+			friends
+		else
+			raise TwitterOauth::APIError
+		end
+	rescue => err
+		puts "Exception in followers_by_cursor: #{err}"
+		raise err
+	end
+
+	# Twitter REST API Method: statuses friends
+	# Returns: array of all friends for the given user
+	# Parameters:
+	# <t>user</t> - screen_name of the user to retrieve friends for. if nil, returns friends for the current twitter-authenticated user
+	def followers(user=nil)
+		cursor = -1
+		page = 0
+		followers = []
+		begin
+			followerspage = followers_by_cursor( user, cursor )
+			page += 1
+			puts "page #{page}/cursor #{cursor} - found #{followerspage["users"].size} followers. Next cursor: #{followerspage["next_cursor"]}"
+			followers += followerspage["users"] if followerspage["users"]
+			cursor = followerspage["next_cursor"]
+		end until cursor == 0
+		followers
+	rescue => err
+		puts "Exception in followers: #{err}"
+		raise err
+	end
+
 	# Twitter REST API Method: friendships exists
 	# Will return true if user_a follows user_b, otherwise will return false.
 	def friendship_exists?(user_a, user_b)

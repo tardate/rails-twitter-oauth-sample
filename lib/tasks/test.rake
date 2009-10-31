@@ -7,10 +7,10 @@ task :demo_proxy_login => :environment do
 	twoauth = TwitterOauth.new(member.token, member.secret)
 
 	puts ".. .. getting friends:"
-	friends = twoauth.friends
-	friends.each do |friend|
-		puts ".. .. .. #{friend['screen_name']}"
-	end
+	twoauth.dump_friends
+	
+	puts ".. .. getting followers:"
+	twoauth.dump_followers
 	
 	puts "demo_proxy_login: Done."
 end

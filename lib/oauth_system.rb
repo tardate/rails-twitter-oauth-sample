@@ -143,24 +143,20 @@ protected
 
 	# Twitter REST API Method: statuses friends
 	def friends(user=nil)
-		begin
-			self.twitagent.friends(user)
-		rescue => err
-			RAILS_DEFAULT_LOGGER.error "Failed to get friends via OAuth for #{current_user.inspect}"
-			flash[:error] = "Twitter API failure (getting friends)"
-			return
-		end	
+		self.twitagent.friends(user)
+	rescue => err
+		RAILS_DEFAULT_LOGGER.error "Failed to get friends via OAuth for #{current_user.inspect}"
+		flash[:error] = "Twitter API failure (getting friends)"
+		return
 	end
 
 	# Twitter REST API Method: statuses followers
 	def followers(user=nil)
-		begin
-			self.twitagent.followers(user)
-		rescue => err
-			RAILS_DEFAULT_LOGGER.error "Failed to get followers via OAuth for #{current_user.inspect}"
-			flash[:error] = "Twitter API failure (getting followers)"
-			return
-		end	
+		self.twitagent.followers(user)
+	rescue => err
+		RAILS_DEFAULT_LOGGER.error "Failed to get followers via OAuth for #{current_user.inspect}"
+		flash[:error] = "Twitter API failure (getting followers)"
+		return
 	end
 
 	# Twitter REST API Method: statuses mentions
