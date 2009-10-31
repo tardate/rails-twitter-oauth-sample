@@ -132,13 +132,11 @@ protected
 
 	# Twitter REST API Method: statuses/update
 	def update_status!(  status , in_reply_to_status_id = nil )
-		begin
-			self.twitagent.update_status!(  status , in_reply_to_status_id )
-		rescue => err
-			# The user might have rejected this application. Or there was some other error during the request.
-			RAILS_DEFAULT_LOGGER.error "#{err.message} Failed update status"
-			return
-		end
+		self.twitagent.update_status!(  status , in_reply_to_status_id )
+	rescue => err
+		# The user might have rejected this application. Or there was some other error during the request.
+		RAILS_DEFAULT_LOGGER.error "#{err.message} Failed update status"
+		return
 	end
 
 	# Twitter REST API Method: statuses friends
@@ -161,24 +159,20 @@ protected
 
 	# Twitter REST API Method: statuses mentions
 	def mentions( since_id = nil, max_id = nil , count = nil, page = nil )
-		begin
-			self.twitagent.mentions( since_id, max_id, count, page )
-		rescue => err
-			RAILS_DEFAULT_LOGGER.error "Failed to get mentions via OAuth for #{current_user.inspect}"
-			flash[:error] = "Twitter API failure (getting mentions)"
-			return
-		end	
+		self.twitagent.mentions( since_id, max_id, count, page )
+	rescue => err
+		RAILS_DEFAULT_LOGGER.error "Failed to get mentions via OAuth for #{current_user.inspect}"
+		flash[:error] = "Twitter API failure (getting mentions)"
+		return
 	end
 
 	# Twitter REST API Method: direct_messages
 	def direct_messages( since_id = nil, max_id = nil , count = nil, page = nil )
-		begin
-			self.twitagent.direct_messages( since_id, max_id, count, page )
-		rescue => err
-			RAILS_DEFAULT_LOGGER.error "Failed to get direct_messages via OAuth for #{current_user.inspect}"
-			flash[:error] = "Twitter API failure (getting direct_messages)"
-			return
-		end	
+		self.twitagent.direct_messages( since_id, max_id, count, page )
+	rescue => err
+		RAILS_DEFAULT_LOGGER.error "Failed to get direct_messages via OAuth for #{current_user.inspect}"
+		flash[:error] = "Twitter API failure (getting direct_messages)"
+		return
 	end
 
 	
