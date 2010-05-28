@@ -23,7 +23,7 @@ Uses the oauth ruby gem.
 These need to be installed in addition to all standard gems required by rails:
 
 json (1.1.6 at time of writing)
-oauth (0.3.5 at time of writing)
+oauth (0.4.0, 0.3.6, or 0.3.5 at time of writing)
 
 NB: for heroku deployment, these are specified in the .gems file in the root of the project
 
@@ -33,6 +33,10 @@ NB: for heroku deployment, these are specified in the .gems file in the root of 
 == 1. Install oauth gem
 
 	gem install oauth
+	
+or
+	
+	rake gems:install
 
 == 2. create the application shell
 
