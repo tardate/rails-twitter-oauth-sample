@@ -1,5 +1,5 @@
 require 'json'
-require 'oauth/consumer'
+require 'oauth'
 
 class TwitterOauth
 
