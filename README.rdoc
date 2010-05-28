@@ -10,6 +10,11 @@ Related blog post: http://tardate.blogspot.com/2009/06/using-twitter-oauth-with-
 Demonstrates the use of rails with the Twitter RESTful API with OAuth 1.0a.
 Uses the oauth ruby gem.
 
+== Version and change log
+
+1.0.2 - updated to fix oauth 0.4.0 compatibility issue
+1.0.1 - update to new pagination mechanism for social graph methods
+1.0 - initial release
 
 == Other References
 
