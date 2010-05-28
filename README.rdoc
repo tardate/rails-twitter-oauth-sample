@@ -1,9 +1,9 @@
 =  RAILS-TWITTER-OAUTH-SAMPLE
 
-Prepared by: paul gallagher - http://tardate.com
-Repository: http://github.com/tardate/rails-twitter-oauth-sample/tree/master
-Demonstration site: http://rails-twitter-oauth-sample.heroku.com
-Related blog post: http://tardate.blogspot.com/2009/06/using-twitter-oauth-with-rails-sample.html
+* Prepared by: paul gallagher - http://tardate.com
+* Repository: http://github.com/tardate/rails-twitter-oauth-sample/tree/master
+* Demonstration site: http://rails-twitter-oauth-sample.heroku.com
+* Related blog post: http://tardate.blogspot.com/2009/06/using-twitter-oauth-with-rails-sample.html
 
 == Purpose
 
@@ -12,9 +12,9 @@ Uses the oauth ruby gem.
 
 == Version and change log
 
-1.0.2 - updated to fix oauth 0.4.0 compatibility issue
-1.0.1 - update to new pagination mechanism for social graph methods
-1.0 - initial release
+* 1.0.2 - updated to fix oauth 0.4.0 compatibility issue
+* 1.0.1 - update to new pagination mechanism for social graph methods
+* 1.0 - initial release
 
 == Other References
 
@@ -27,8 +27,8 @@ Uses the oauth ruby gem.
 
 These need to be installed in addition to all standard gems required by rails:
 
-json (1.1.6 at time of writing)
-oauth (0.4.0, 0.3.6, or 0.3.5 at time of writing)
+* json (1.1.6 at time of writing)
+* oauth (0.4.0, 0.3.6, or 0.3.5 at time of writing)
 
 NB: for heroku deployment, these are specified in the .gems file in the root of the project
 
@@ -55,9 +55,9 @@ or
 
 Member model updated to use screen_name as the key:
 
-		def to_param
-			screen_name
-		end
+	def to_param
+		screen_name
+	end
 		
 == 4. Prepare the database
 
